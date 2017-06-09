@@ -164,9 +164,11 @@ public class HighchartsJsonUtils {
 		JsonPropertyFilter f1=new JsonPropertyFilter("series<",FilterType.STARTS_WITH);
 		JsonPropertyFilter f2=new JsonPropertyFilter("global",FilterType.STARTS_WITH);
 		JsonPropertyFilter f3=new JsonPropertyFilter("lang",FilterType.STARTS_WITH);
+		JsonPropertyFilter f4=new JsonPropertyFilter("zAxis",FilterType.STARTS_WITH);
 		for(HighchartsJsonProperty p : properties){
 			String fullname = p.getFullname();
-			if(!f1.applyFilterTo(fullname)&&!f2.applyFilterTo(fullname)&&!f3.applyFilterTo(fullname)){
+			if(!f1.applyFilterTo(fullname)&&!f2.applyFilterTo(fullname)
+					&&!f3.applyFilterTo(fullname)&&!f4.applyFilterTo(fullname)){
 				result.add(p);
 			}
 		}
