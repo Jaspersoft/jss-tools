@@ -36,6 +36,84 @@ public class HighchartsJsonUtils {
 	
 	// Default file location for the JSON configuration file
 	private static final String DEFAULT_JSON_LOCATION = "/highcharts-configuration.json";
+	
+	// List of filters to be applied to the properties list in order
+	// to clean out un-wanted elements
+	private static List<JsonPropertyFilter> pFilters;
+	
+	static {
+		pFilters = new ArrayList<>();
+		pFilters.add(new JsonPropertyFilter("global",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("lang",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("accessibility",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("annotations",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("boost",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("data",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("defs",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("drilldown",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("exporting",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("drilldown",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("loading",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("navigation",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("noData",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("pane",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("responsive",FilterType.STARTS_WITH));		
+		pFilters.add(new JsonPropertyFilter("series",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("time",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("zAxis",FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("chart.options3d", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("position3d", FilterType.ENDS_WITH));
+		pFilters.add(new JsonPropertyFilter("chart.parallelCoordinates", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("chart.parallelAxes", FilterType.STARTS_WITH));
+		
+		// requires "series-label.js" module
+		pFilters.add(new JsonPropertyFilter("plotOptions.area.label", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.areaspline.label", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.bar.label", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.bubble.label", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.column.label", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.heatmap.label", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.line.label", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.pie.label", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.scatter.label", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.series.label", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.spline.label", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.treemap.label", FilterType.STARTS_WITH));
+		
+		// not "implemented" types
+		pFilters.add(new JsonPropertyFilter("plotOptions.areasplinerange", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.arearange", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.bellcurve", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.boxplot", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.bullet", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.columnpyramid", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.columnrange", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.cylinder", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.errorbar", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.funnel", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.gauge", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.histogram", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.networkgraph", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.packedbubble", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.pareto", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.polygon", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.pyramid", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.sankey", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.scatter3d", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.solidgauge", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.streamgraph", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.sunburst", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.tilemap", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.variablepie", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.variwide", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.vector", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.venn", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.waterfall", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.windbarb", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.wordcloud", FilterType.STARTS_WITH));
+		pFilters.add(new JsonPropertyFilter("plotOptions.xrange", FilterType.STARTS_WITH));
+	}
+	
 
 	// Singleton
 	private HighchartsJsonUtils(){
@@ -160,16 +238,22 @@ public class HighchartsJsonUtils {
 	 */
 	public static List<HighchartsJsonProperty> filterUselessProperties(
 			List<HighchartsJsonProperty> properties){
-		List<HighchartsJsonProperty> result = new ArrayList<HighchartsJsonProperty>();
-		JsonPropertyFilter f1=new JsonPropertyFilter("series<",FilterType.STARTS_WITH);
-		JsonPropertyFilter f2=new JsonPropertyFilter("global",FilterType.STARTS_WITH);
-		JsonPropertyFilter f3=new JsonPropertyFilter("lang",FilterType.STARTS_WITH);
-		JsonPropertyFilter f4=new JsonPropertyFilter("zAxis",FilterType.STARTS_WITH);
+		List<HighchartsJsonProperty> result = new ArrayList<>();
 		for(HighchartsJsonProperty p : properties){
-			String fullname = p.getFullname();
-			if(!f1.applyFilterTo(fullname)&&!f2.applyFilterTo(fullname)
-					&&!f3.applyFilterTo(fullname)&&!f4.applyFilterTo(fullname)){
-				result.add(p);
+			if(p.getProducts().contains("highcharts")) {
+				String fullname = p.getFullname();
+				boolean validProperty = true;
+				for(JsonPropertyFilter f:pFilters) {
+					if(f.applyFilterTo(fullname)) {
+						// at least one filter applied,
+						// no need to apply the others
+						validProperty = false;
+						break;
+					}
+				}
+				if(validProperty) {
+					result.add(p);					
+				}
 			}
 		}
 		return result;
@@ -204,7 +288,7 @@ public class HighchartsJsonUtils {
 				types.add(rt);
 			}
 		}
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		result.addAll(types);
 		return result;
 	}
@@ -212,15 +296,15 @@ public class HighchartsJsonUtils {
 	
 	public static void main(String args[]) throws MalformedURLException{
 		// grab the last available highcharts json file
-		listAllPropertyAttributes(new URL("http://api.highcharts.com/highcharts/option/dump.json"));
+		//listAllPropertyAttributes(new URL("http://api.highcharts.com/highcharts/option/dump.json"));
 
 		// rely on the shipped one
-		//listAllPropertyAttributes(null);
+		listAllPropertyAttributes(null);
 		
 		// read and filter the properties
 		List<HighchartsJsonProperty> properties = readModelAsBeans(null, true);
-		properties = filterPropertiesByVersion(properties, "4.2.1");
 		properties = filterUselessProperties(properties);
+		properties = filterPropertiesByVersion(properties, "6.1.1");
 		
 		// print the list of return types found
 		for(String rt : collectReturnTypes(properties)){

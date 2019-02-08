@@ -7,6 +7,9 @@ package com.jaspersoft.studio.tools.highcharts;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
@@ -15,23 +18,22 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
  *
  */
+@JsonIgnoreProperties(value={
+		"extends","isParent","seeAlso","context","demo","deprecated"})
 public class HighchartsJsonProperty implements Cloneable {
 
 	private String name;
 	private String returnType;
+	@JsonProperty(access=Access.WRITE_ONLY)
 	private String since;
 	private String description;
-	private String demo;
-	private boolean deprecated;
 	private String fullname;
 	private String title;
 	private String parent;
-	private boolean isParent;
+	@JsonProperty(access=Access.WRITE_ONLY)
 	private List<String> products;
-	private String context;
 	private String defaults;
 	private String values;
-	private String seeAlso;
 
 	public String getName() {
 		return name;
@@ -65,22 +67,6 @@ public class HighchartsJsonProperty implements Cloneable {
 		this.description = description;
 	}
 
-	public String getDemo() {
-		return demo;
-	}
-
-	public void setDemo(String demo) {
-		this.demo = demo;
-	}
-
-	public boolean isDeprecated() {
-		return deprecated;
-	}
-
-	public void setDeprecated(boolean deprecated) {
-		this.deprecated = deprecated;
-	}
-
 	public String getFullname() {
 		return fullname;
 	}
@@ -107,30 +93,12 @@ public class HighchartsJsonProperty implements Cloneable {
 		this.parent = parent;
 	}
 
-	@JsonGetter(value = "isParent")
-	public boolean isParent() {
-		return isParent;
-	}
-
-	@JsonSetter(value = "isParent")
-	public void setIsParent(boolean isParent) {
-		this.isParent = isParent;
-	}
-
 	public List<String> getProducts() {
 		return products;
 	}
 
 	public void setProducts(List<String> products) {
 		this.products = products;
-	}
-
-	public String getContext() {
-		return context;
-	}
-
-	public void setContext(String context) {
-		this.context = context;
 	}
 
 	public String getDefaults() {
@@ -149,14 +117,6 @@ public class HighchartsJsonProperty implements Cloneable {
 		this.values = values;
 	}
 
-	public String getSeeAlso() {
-		return seeAlso;
-	}
-
-	public void setSeeAlso(String seeAlso) {
-		this.seeAlso = seeAlso;
-	}
-	
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		return super.clone();
