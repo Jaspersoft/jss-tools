@@ -100,7 +100,6 @@ public class HighchartsJsonUtils {
 		pFilters.add(new JsonPropertyFilter("plotOptions.pyramid", FilterType.STARTS_WITH));
 		pFilters.add(new JsonPropertyFilter("plotOptions.sankey", FilterType.STARTS_WITH));
 		pFilters.add(new JsonPropertyFilter("plotOptions.scatter3d", FilterType.STARTS_WITH));
-		pFilters.add(new JsonPropertyFilter("plotOptions.solidgauge", FilterType.STARTS_WITH));
 		pFilters.add(new JsonPropertyFilter("plotOptions.streamgraph", FilterType.STARTS_WITH));
 		pFilters.add(new JsonPropertyFilter("plotOptions.sunburst", FilterType.STARTS_WITH));
 		pFilters.add(new JsonPropertyFilter("plotOptions.tilemap", FilterType.STARTS_WITH));
